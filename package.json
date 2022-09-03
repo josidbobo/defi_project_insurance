@@ -1,0 +1,11 @@
+{
+  "name": "insurance_dapp",
+  "version": "1.0.0",
+  "description": "A defi platform on the blockchain",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "author": "https://github.com/josidbobo",
+  "license": "MIT"
+}
