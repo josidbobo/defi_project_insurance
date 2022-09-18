@@ -19,16 +19,13 @@ class Portfolio extends StatefulWidget {
 }
 
 class _PortfolioState extends State<Portfolio> {
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.values[3],
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 3,
-      backgroundColor: const Color.fromRGBO(132, 57, 52, 1),
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+  FToast? fToast;
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast!.init(context);
   }
 
   void _showCreateDialog(context) {
@@ -74,18 +71,18 @@ class _PortfolioState extends State<Portfolio> {
                                     Colors.orange[600],
                                   )),
                               onPressed: () {
-                                context.read<InsuranceProvider>().insure(
-                                    widget.typeOfInsurance.text,
-                                    widget.insureAmount.text,
-                                    widget.insureBeneficiary.text,
-                                    widget.insurePassword.text);
-                                if (provider.noErrors) {
-                                  Navigator.of(context).pop();
-                                  showToast(provider.msg);
-                                }
-                                if (provider.error) {
-                                  showToast(provider.msg);
-                                }
+                                // context.read<InsuranceProvider>().insure(
+                                //     widget.typeOfInsurance.text,
+                                //     widget.insureAmount.text,
+                                //     widget.insureBeneficiary.text,
+                                //     widget.insurePassword.text);
+                                // if (provider.noErrors) {
+                                //   Navigator.of(context).pop();
+                                //   showToast(provider.msg);
+                                // }
+                                // if (provider.error) {
+                                //   showToast(provider.msg);
+                                // }
                               },
                               child: provider.isLoading
                                   ? Container(

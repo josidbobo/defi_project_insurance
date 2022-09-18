@@ -22,8 +22,8 @@ class InsuranceProvider extends ChangeNotifier {
   Contract? contract;
 
   InsuranceProvider() {
-    this.anotherContract = Contract(insuranceAddress, abii, provider);
-    this.contract = anotherContract!.connect(provider!.getSigner());
+    anotherContract = Contract(insuranceAddress, abii, provider);
+    contract = anotherContract!.connect(provider!.getSigner());
   }
 
   static String compressAddress(String address) {
@@ -43,14 +43,13 @@ class InsuranceProvider extends ChangeNotifier {
 
   //
 
-  Future<void> insure(
-      String name, String aamount, String beneficiary, String password) async {
+  Future<void> insure(String name, String aamount, String beneficiary,
+      String _amountForBenef, String password) async {
     try {
       loading = true;
       notifyListeners();
       final aamnt = num.parse(
-          int.parse(EthUtils.parseEther(aamount).toString())
-              .toString());
+          int.parse(EthUtils.parseEther(aamount).toString()).toString());
       Type type = aamnt.runtimeType;
       print(type);
       print('e reach here');
@@ -62,21 +61,24 @@ class InsuranceProvider extends ChangeNotifier {
       print(insuring.hash);
 
       final result = await anotherContract!.call<BigInt>(
-        'portfolioCountOfEachUser', [MetaMaskProvider.curentAddress]
-      );
+          'portfolioCountOfEachUser', [MetaMaskProvider.curentAddress]);
       print(result);
 
-      final struct =
-          await anotherContract!.call('userInsurances', [MetaMaskProvider.curentAddress, result - BigInt.from(2)]);
-      print(struct); 
+      final struct = await anotherContract!.call('userInsurances',
+          [MetaMaskProvider.curentAddress, result - BigInt.from(2)]);
+      print(struct);
 
-      insurance.add(Insurance(
-          owner: struct.owner,
-          id: struct.insuranceId,
-          insuranceName: struct.insuranceName,  
-          amount: int.parse(EthUtils.formatEther(struct.amount)),
-          beneficiary: compressAddress(struct.beneficiary),
-          numberOfClaims: struct.numberOfClaims));
+      for (int i = 1; i <= result.toInt(); i++){
+          insurance.add(Insurance(
+            owner: struct(i).owner,
+            id: struct(i).insuranceId,
+            insuranceName: struct(i).insuranceName,
+            amount: int.parse(EthUtils.formatEther(struct(i).amount)),
+            amountForBeneficiary:
+                int.parse(EthUtils.formatEther(struct(i).amountForBeneficiary)),
+            beneficiary: compressAddress(struct(i).beneficiary),
+            numberOfClaims: struct(i).numberOfClaims));
+      }
 
       noErrors = true;
       msg = 'Successful';

@@ -16,9 +16,15 @@ class Claims {
 
   void set() {
     if (approved == true) {
-      status = const Text('Approved', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),);
-    } else{
-      status = const Text('Not Approved', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),);
+      status = const Text(
+        'Approved',
+        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+      );
+    } else {
+      status = const Text(
+        'Not Approved',
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+      );
     }
   }
 }
@@ -29,6 +35,7 @@ class Insurance {
   final String insuranceName;
   final int amount;
   final String beneficiary;
+  final int amountForBeneficiary;
   final int numberOfClaims;
   late List<Claims> claims;
 
@@ -37,6 +44,7 @@ class Insurance {
       required this.owner,
       required this.id,
       required this.insuranceName,
+      required this.amountForBeneficiary,
       required this.amount,
       required this.beneficiary,
       required this.numberOfClaims});
