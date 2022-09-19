@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:insurance_dapp/providers/metamask_provider.dart';
+import 'package:insurance_dapp/screens/makeClaim.dart';
 import 'package:insurance_dapp/screens/portfolio.dart';
 import 'package:insurance_dapp/widgets/home_page.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
           '/': (context) =>
               const MyHomePage(title: 'Egbon Adugbo Insurance Ltd'),
           '/portfolio': (context) => Portfolio(),
+          '/makeClaims' : (context) => const SearchPage(),
         });
   }
 }

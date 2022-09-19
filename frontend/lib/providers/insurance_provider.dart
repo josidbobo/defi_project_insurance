@@ -7,12 +7,15 @@ import 'dart:math';
 
 class InsuranceProvider extends ChangeNotifier {
   List<Insurance> insurance = [];
+  static List<Insurance> portfolioInsurance = [];
+  List<Claims>? adHoc = [];
 
   List<Insurance> get insuranceList => insurance;
 
   bool loading = false;
   bool error = false;
   bool noErrors = false;
+  bool isInsureed = false;
 
   get isLoading => loading;
 
@@ -43,6 +46,14 @@ class InsuranceProvider extends ChangeNotifier {
 
   //
 
+  isInsured() async {
+    final txResult = await anotherContract!
+        .call<bool>('isInsuree', [MetaMaskProvider.curentAddress]);
+    print(txResult);
+    isInsureed = txResult;
+    notifyListeners();
+  }
+
   Future<void> insure(String name, String aamount, String beneficiary,
       String _amountForBenef, String password) async {
     try {
@@ -50,13 +61,15 @@ class InsuranceProvider extends ChangeNotifier {
       notifyListeners();
       final aamnt = num.parse(
           int.parse(EthUtils.parseEther(aamount).toString()).toString());
+      final aamnt2 = num.parse(
+          int.parse(EthUtils.parseEther(_amountForBenef).toString()).toString());
       Type type = aamnt.runtimeType;
       print(type);
       print('e reach here');
 
       final insuring = await contract!.send(
           'insure',
-          [BigInt.from(aamnt), name, beneficiary, password],
+          [BigInt.from(aamnt), name, beneficiary, BigInt.from(aamnt2), password],
           TransactionOverride(value: BigInt.from(aamnt)));
       print(insuring.hash);
 
@@ -64,20 +77,53 @@ class InsuranceProvider extends ChangeNotifier {
           'portfolioCountOfEachUser', [MetaMaskProvider.curentAddress]);
       print(result);
 
-      final struct = await anotherContract!.call('userInsurances',
-          [MetaMaskProvider.curentAddress, result - BigInt.from(2)]);
-      print(struct);
+      for (int i = 1; i <= result.toInt(); i++) {
+        final struct = await anotherContract!
+            .call('userInsurances', [MetaMaskProvider.curentAddress, i]);
+        print(struct);
 
-      for (int i = 1; i <= result.toInt(); i++){
-          insurance.add(Insurance(
-            owner: struct(i).owner,
-            id: struct(i).insuranceId,
-            insuranceName: struct(i).insuranceName,
-            amount: int.parse(EthUtils.formatEther(struct(i).amount)),
-            amountForBeneficiary:
-                int.parse(EthUtils.formatEther(struct(i).amountForBeneficiary)),
-            beneficiary: compressAddress(struct(i).beneficiary),
-            numberOfClaims: struct(i).numberOfClaims));
+        for (int u = 0; u <= struct.numberOfClaims; u++) {
+          adHoc!.add(Claims(
+              beneficiary: struct.claims(u).beneficiary,
+              amount: struct.claims(u).amount,
+              description: struct.claims(u).description,
+              approved: struct.claims(u).approved));
+        }
+
+        insurance.add(Insurance(
+          owner: struct.owner,
+          id: struct.insuranceId,
+          insuranceName: struct.insuranceName,
+          amount: int.parse(EthUtils.formatEther(struct.amount)),
+          amountForBeneficiary:
+              int.parse(EthUtils.formatEther(struct.amountForBeneficiary)),
+          beneficiary: compressAddress(struct.beneficiary),
+          numberOfClaims: struct.numberOfClaims,
+          claims: adHoc,
+        ));
+
+        adHoc!.clear();
+      }
+
+      final count = await anotherContract!.call<BigInt>(
+        'count',
+      );
+      print(count);
+
+      for (int i = 1; i <= count.toInt(); i++) {
+        final struct2 = await anotherContract!.call('portfolios', [i]);
+        print(struct2);
+
+        portfolioInsurance.add(Insurance(
+          owner: struct2.owner,
+          id: struct2.insuranceId,
+          insuranceName: struct2.insuranceName,
+          amount: int.parse(EthUtils.formatEther(struct2.amount)),
+          amountForBeneficiary:
+              int.parse(EthUtils.formatEther(struct2.amountForBeneficiary)),
+          beneficiary: compressAddress(struct2.beneficiary),
+          numberOfClaims: struct2.numberOfClaims,
+        ));
       }
 
       noErrors = true;

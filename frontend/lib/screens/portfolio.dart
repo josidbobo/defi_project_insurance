@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insurance_dapp/widgets/portfolios_view.dart';
+import 'package:insurance_dapp/widgets/progressIndicator.dart';
+import 'package:insurance_dapp/widgets/toastBody.dart';
 import 'package:provider/provider.dart';
 import '../widgets/text_field.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +14,7 @@ class Portfolio extends StatefulWidget {
   final insureBeneficiary = TextEditingController();
   final insurePassword = TextEditingController();
   final typeOfInsurance = TextEditingController();
+  final amountForBenef = TextEditingController();
   Portfolio({Key? key}) : super(key: key);
 
   @override
@@ -28,37 +31,48 @@ class _PortfolioState extends State<Portfolio> {
     fToast!.init(context);
   }
 
+  showToast(String msg, IconData anyOther, [bool? bl]) => fToast!.showToast(
+        child: ToastBody(anyOther, msg, bl ?? false),
+        gravity: ToastGravity.TOP,
+        toastDuration: Duration(seconds: 3),
+      );
+
   void _showCreateDialog(context) {
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (_) {
           return ChangeNotifierProvider(
-              create: (context) => InsuranceProvider(),
+              create: (context) => InsuranceProvider()..isInsured(),
               builder: (context, child) {
                 return Dialog(
                   child: SizedBox(
                     height: 410,
                     width: 710,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8),
-                        TextView(
-                            text: 'Amount in EVMOS eg: 0.01',
-                            controller: widget.insureAmount),
-                        TextView(
-                            text: 'Description of Insurance',
-                            controller: widget.typeOfInsurance),
-                        TextView(
-                            text: 'Default beneficiary address',
-                            controller: widget.insureBeneficiary),
-                        TextView(
-                            text: 'password',
-                            controller: widget.insurePassword),
-                        Consumer<InsuranceProvider>(
-                            builder: (context, provider, child) {
-                          return ListTile(
+                    child: Consumer<InsuranceProvider>(
+                        builder: (context, provider, child) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8),
+                          TextView(
+                              text: 'Amount in EVMOS eg: 0.01',
+                              controller: widget.insureAmount),
+                          TextView(
+                              text: 'Title of Insurance',
+                              controller: widget.typeOfInsurance),
+                          TextView(
+                              text: 'Beneficiary address',
+                              controller: widget.insureBeneficiary),
+                          TextView(
+                              text: 'Max amount beneficiary can withdraw',
+                              controller: widget.amountForBenef),
+                          !provider.isInsureed
+                              ? TextView(
+                                  text: 'password',
+                                  controller: widget.insurePassword)
+                              : const SizedBox(),
+                          ListTile(
                             trailing: ElevatedButton(
                               style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
@@ -71,35 +85,40 @@ class _PortfolioState extends State<Portfolio> {
                                     Colors.orange[600],
                                   )),
                               onPressed: () {
-                                // context.read<InsuranceProvider>().insure(
-                                //     widget.typeOfInsurance.text,
-                                //     widget.insureAmount.text,
-                                //     widget.insureBeneficiary.text,
-                                //     widget.insurePassword.text);
-                                // if (provider.noErrors) {
-                                //   Navigator.of(context).pop();
-                                //   showToast(provider.msg);
-                                // }
-                                // if (provider.error) {
-                                //   showToast(provider.msg);
-                                // }
+                                provider.isInsureed
+                                    ? context.read<InsuranceProvider>().insure(
+                                        widget.typeOfInsurance.text,
+                                        widget.insureAmount.text,
+                                        widget.insureBeneficiary.text,
+                                        widget.amountForBenef.text,
+                                        "")
+                                    : context.read<InsuranceProvider>().insure(
+                                        widget.typeOfInsurance.text,
+                                        widget.insureAmount.text,
+                                        widget.insureBeneficiary.text,
+                                        widget.amountForBenef.text,
+                                        widget.insurePassword.text);
+                                if (provider.noErrors) {
+                                  Navigator.of(context).pop();
+                                  showToast(provider.msg,
+                                      Icons.playlist_add_check_rounded);
+                                }
+                                if (provider.error) {
+                                  showToast(
+                                      provider.msg, Icons.error_outline, true);
+                                }
                               },
                               child: provider.isLoading
-                                  ? Container(
-                                      height: 4,
-                                      child: const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
+                                  ? const CircularProgress()
                                   : const Text(
                                       "Create Portfolio",
                                       style: TextStyle(color: Colors.white),
                                     ),
                             ),
-                          );
-                        }),
-                      ],
-                    ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 );
               });
@@ -205,7 +224,7 @@ class _PortfolioState extends State<Portfolio> {
                         height: 43,
                         child: ElevatedButton(
                             onPressed: () {
-                              // context.read<MetaMaskProvider>().disconnect();
+                              Navigator.of(context).pushNamed('/makeClaims');
                             },
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.green),

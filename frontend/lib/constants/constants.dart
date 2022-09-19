@@ -1,55 +1,8 @@
-const insuranceAddress = "0xF5bDF45882CB1C5506eD2360F5fecb5b6a1f9a8A";
+const insuranceAddress = "0xDbA3143cBa22b5b904F2f736cbB42F1268A64208";
 //const insuranceAddress2 = '0xB517274C514fb783f5C8Aaac69bAf9433fDb1aC2';
 //const insuranceAddress = "0xad78b7b35ea23066449260a86d2b7321fefd337f";
 
 const abii = '''[
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_idOfClaim",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_password",
-				"type": "bytes32"
-			}
-		],
-		"name": "approveClaim",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "iD",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_newBeneficiary",
-				"type": "address"
-			}
-		],
-		"name": "changeBeneficiary",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -87,35 +40,6 @@ const abii = '''[
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "iD",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "__amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_pass",
-				"type": "string"
-			}
-		],
-		"name": "changeBeneficiaryAmount",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -145,25 +69,6 @@ const abii = '''[
 		],
 		"name": "ClaimMade",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "insuranceDeposit",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -219,6 +124,156 @@ const abii = '''[
 		"inputs": [
 			{
 				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_idOfClaim",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "approveClaim",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "iD",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_newBeneficiary",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_pass",
+				"type": "string"
+			}
+		],
+		"name": "changeBeneficiary",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "iD",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "__amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_pass",
+				"type": "string"
+			}
+		],
+		"name": "changeBeneficiaryAmount",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_pass",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "newPass",
+				"type": "string"
+			}
+		],
+		"name": "changePassword",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "count",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getContractBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "insuranceDeposit",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
 			},
@@ -246,6 +301,38 @@ const abii = '''[
 		"name": "insure",
 		"outputs": [],
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "isInsuree",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "locked",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -290,101 +377,17 @@ const abii = '''[
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_password",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "iD",
-				"type": "uint256"
-			}
-		],
-		"name": "toggleAuthorisation",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "iD",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "topUpPortfolio",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "payee",
-				"type": "address"
-			}
-		],
-		"name": "transferBalance",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
-	},
-	{
-		"inputs": [],
-		"name": "count",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getContractBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "isInsuree",
+		"name": "passwordHash",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "bytes32",
 				"name": "",
-				"type": "bool"
+				"type": "bytes32"
 			}
 		],
 		"stateMutability": "view",
@@ -460,17 +463,66 @@ const abii = '''[
 				"type": "bool"
 			},
 			{
-				"internalType": "bytes32",
-				"name": "passwordHash",
-				"type": "bytes32"
-			},
-			{
 				"internalType": "uint256",
 				"name": "numberOfClaims",
 				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "iD",
+				"type": "uint256"
+			}
+		],
+		"name": "toggleAuthorisation",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "iD",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "topUpPortfolio",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "payee",
+				"type": "address"
+			}
+		],
+		"name": "transferBalance",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -542,11 +594,6 @@ const abii = '''[
 				"type": "bool"
 			},
 			{
-				"internalType": "bytes32",
-				"name": "passwordHash",
-				"type": "bytes32"
-			},
-			{
 				"internalType": "uint256",
 				"name": "numberOfClaims",
 				"type": "uint256"
@@ -554,5 +601,9 @@ const abii = '''[
 		],
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
 	}
 ]''';

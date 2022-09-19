@@ -37,7 +37,7 @@ class Insurance {
   final String beneficiary;
   final int amountForBeneficiary;
   final int numberOfClaims;
-  late List<Claims> claims;
+  List<Claims>? claims;
 
   Insurance(
       {Key? key,
@@ -47,5 +47,6 @@ class Insurance {
       required this.amountForBeneficiary,
       required this.amount,
       required this.beneficiary,
-      required this.numberOfClaims});
+      required this.numberOfClaims,
+      this.claims});
 }
