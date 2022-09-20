@@ -4,7 +4,7 @@ import 'package:insurance_dapp/providers/insurance_provider.dart';
 
 class PortfolioView extends StatefulWidget {
   final String nameOfInsurance;
-  final int amountOfInsurance;
+  final double amountOfInsurance;
   final String beneficiaryAddress;
   final int id;
 

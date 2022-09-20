@@ -1,52 +1,58 @@
 import 'package:flutter/material.dart';
 
-class Claims {
-  final String beneficiary;
-  final int amount;
-  final String description;
-  final bool approved;
-  Widget? status;
-
-  Claims(
-      {Key? key,
-      required this.beneficiary,
-      required this.amount,
-      required this.description,
-      required this.approved});
-
-  void set() {
-    if (approved == true) {
-      status = const Text(
-        'Approved',
-        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-      );
-    } else {
-      status = const Text(
-        'Not Approved',
-        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-      );
-    }
-  }
-}
-
 class Insurance {
   final String owner;
-  final int id;
+  final String id;
   final String insuranceName;
-  final int amount;
+  final double amount;
   final String beneficiary;
-  final int amountForBeneficiary;
-  final int numberOfClaims;
-  List<Claims>? claims;
+  final bool isApproved;
+  final double amountForBeneficiary;
 
-  Insurance(
-      {Key? key,
-      required this.owner,
-      required this.id,
-      required this.insuranceName,
-      required this.amountForBeneficiary,
-      required this.amount,
-      required this.beneficiary,
-      required this.numberOfClaims,
-      this.claims});
+  Insurance._internal({
+    Key? key,
+    required this.owner,
+    required this.id,
+    required this.insuranceName,
+    required this.amountForBeneficiary,
+    required this.isApproved,
+    required this.amount,
+    required this.beneficiary,
+  });
+
+  // Insurance copyWith({
+  //   String? owner,
+  //   String? id,
+  //   String? insuranceName,
+  //   double? amount,
+  //   String? beneficiary,
+  //   bool? isApproved,
+  //   double? amountForBeneficiary,
+  // }) {
+  //   return Insurance(
+  //     owner: owner ?? this.owner,
+  //     id: id ?? this.id,
+  //     insuranceName: insuranceName ?? this.insuranceName,
+  //     amount: amount ?? this.amount,
+  //     beneficiary: beneficiary ?? this.beneficiary,
+  //     isApproved: isApproved ?? this.isApproved,
+  //     amountForBeneficiary: amountForBeneficiary ?? this.amountForBeneficiary,
+  //   );
+  // }
+
+  factory Insurance(
+    String oowner, String iid, String iinsuranceName, double aamount, String bbeneficiary,
+    bool iisApproved, double aamountForBeneficiary,){
+    return Insurance._internal(
+      owner: oowner, 
+      id: iid, 
+      insuranceName: iinsuranceName, 
+      amountForBeneficiary: aamountForBeneficiary, 
+      isApproved: iisApproved, 
+      amount: aamount, 
+      beneficiary: bbeneficiary);
+  }
+
+  static List<Insurance> insurance = <Insurance>[];
+  static List<Insurance> portfolioInsurance = <Insurance> [];
 }

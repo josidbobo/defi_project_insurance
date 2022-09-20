@@ -9,7 +9,7 @@ const hre = require("hardhat");
 async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
 
-  const Egbon = await hre.ethers.getContractFactory("EgbonAdugbo");
+  const Egbon = await hre.ethers.getContractFactory("MyDefence");
   const egbon = await Egbon.deploy();
 
   await egbon.deployed();

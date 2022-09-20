@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insurance_dapp/models/insurance_model.dart';
 import 'package:insurance_dapp/widgets/portfolios_view.dart';
 import 'package:insurance_dapp/widgets/progressIndicator.dart';
 import 'package:insurance_dapp/widgets/toastBody.dart';
@@ -29,6 +30,16 @@ class _PortfolioState extends State<Portfolio> {
     super.initState();
     fToast = FToast();
     fToast!.init(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.insureAmount.clear();
+    widget.amountForBenef.clear();
+    widget.insureBeneficiary.clear();
+    widget.insurePassword.clear();
+    widget.typeOfInsurance.clear();
   }
 
   showToast(String msg, IconData anyOther, [bool? bl]) => fToast!.showToast(
@@ -106,6 +117,8 @@ class _PortfolioState extends State<Portfolio> {
                                 if (provider.error) {
                                   showToast(
                                       provider.msg, Icons.error_outline, true);
+                                }if(provider.isFinished){
+                                  dispose();
                                 }
                               },
                               child: provider.isLoading
@@ -243,7 +256,7 @@ class _PortfolioState extends State<Portfolio> {
                     width: 860,
                     child: Consumer<InsuranceProvider>(
                         builder: (context, provider, child) {
-                      if (provider.insuranceList.isEmpty) {
+                      if (Insurance.insurance.isEmpty) {
                         return Center(
                           child: Text(
                             'No Portfolios to display!',
@@ -255,15 +268,15 @@ class _PortfolioState extends State<Portfolio> {
                         itemBuilder: ((context, index) {
                           return PortfolioView(
                             amountOfInsurance:
-                                provider.insuranceList[index].amount,
-                            id: provider.insuranceList[index].id,
+                                Insurance.insurance[index].amount,
+                            id: int.parse(Insurance.insurance[index].id),
                             beneficiaryAddress:
-                                provider.insuranceList[index].beneficiary,
+                                Insurance.insurance[index].beneficiary,
                             nameOfInsurance:
-                                provider.insuranceList[index].insuranceName,
+                                Insurance.insurance[index].insuranceName,
                           );
                         }),
-                        itemCount: provider.insuranceList.length,
+                        itemCount: Insurance.insurance.length,
                         padding: const EdgeInsets.all(10),
                       );
                     }),

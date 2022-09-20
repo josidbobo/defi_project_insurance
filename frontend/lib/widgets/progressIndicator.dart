@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 class CircularProgress extends StatelessWidget {
   const CircularProgress(
-      {Key? key, this.materialStrokeWidth = 1.5, this.height, this.color})
+      {Key? key, this.materialStrokeWidth = 3.5, this.height, this.color})
       : super(key: key);
 
   final double? height;
@@ -13,7 +13,7 @@ class CircularProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height ?? 8,
-      width: 7,
+      width: 10,
       child: Center(
         child: AspectRatio(
             aspectRatio: 1.0,

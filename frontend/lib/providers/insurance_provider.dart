@@ -6,16 +6,13 @@ import '../constants/constants.dart';
 import 'dart:math';
 
 class InsuranceProvider extends ChangeNotifier {
-  List<Insurance> insurance = [];
-  static List<Insurance> portfolioInsurance = [];
-  List<Claims>? adHoc = [];
-
-  List<Insurance> get insuranceList => insurance;
+  // List<Insurance> get insuranceList => insurance;
 
   bool loading = false;
   bool error = false;
   bool noErrors = false;
   bool isInsureed = false;
+  bool isFinished = false;
 
   get isLoading => loading;
 
@@ -62,14 +59,20 @@ class InsuranceProvider extends ChangeNotifier {
       final aamnt = num.parse(
           int.parse(EthUtils.parseEther(aamount).toString()).toString());
       final aamnt2 = num.parse(
-          int.parse(EthUtils.parseEther(_amountForBenef).toString()).toString());
+          int.parse(EthUtils.parseEther(_amountForBenef).toString())
+              .toString());
       Type type = aamnt.runtimeType;
       print(type);
-      print('e reach here');
 
       final insuring = await contract!.send(
           'insure',
-          [BigInt.from(aamnt), name, beneficiary, BigInt.from(aamnt2), password],
+          [
+            BigInt.from(aamnt),
+            name,
+            beneficiary,
+            BigInt.from(aamnt2),
+            password
+          ],
           TransactionOverride(value: BigInt.from(aamnt)));
       print(insuring.hash);
 
@@ -77,33 +80,24 @@ class InsuranceProvider extends ChangeNotifier {
           'portfolioCountOfEachUser', [MetaMaskProvider.curentAddress]);
       print(result);
 
-      for (int i = 1; i <= result.toInt(); i++) {
+      for (int i = 1; i <= result.toInt() + 1; i++) {
         final struct = await anotherContract!
             .call('userInsurances', [MetaMaskProvider.curentAddress, i]);
         print(struct);
 
-        for (int u = 0; u <= struct.numberOfClaims; u++) {
-          adHoc!.add(Claims(
-              beneficiary: struct.claims(u).beneficiary,
-              amount: struct.claims(u).amount,
-              description: struct.claims(u).description,
-              approved: struct.claims(u).approved));
-        }
-
-        insurance.add(Insurance(
-          owner: struct.owner,
-          id: struct.insuranceId,
-          insuranceName: struct.insuranceName,
-          amount: int.parse(EthUtils.formatEther(struct.amount)),
-          amountForBeneficiary:
-              int.parse(EthUtils.formatEther(struct.amountForBeneficiary)),
-          beneficiary: compressAddress(struct.beneficiary),
-          numberOfClaims: struct.numberOfClaims,
-          claims: adHoc,
+        Insurance.insurance.add(Insurance(
+          struct[0].toString(),
+          struct[1].toString(),
+          struct[2].toString(),
+          ethersSplitter(int.parse(struct[3].toString())),
+          struct[5].toString(),
+          struct[7],
+          ethersSplitter(int.parse(struct[6].toString())),
         ));
-
-        adHoc!.clear();
+        notifyListeners();
       }
+
+      print(Insurance.insurance);
 
       final count = await anotherContract!.call<BigInt>(
         'count',
@@ -114,17 +108,18 @@ class InsuranceProvider extends ChangeNotifier {
         final struct2 = await anotherContract!.call('portfolios', [i]);
         print(struct2);
 
-        portfolioInsurance.add(Insurance(
-          owner: struct2.owner,
-          id: struct2.insuranceId,
-          insuranceName: struct2.insuranceName,
-          amount: int.parse(EthUtils.formatEther(struct2.amount)),
-          amountForBeneficiary:
-              int.parse(EthUtils.formatEther(struct2.amountForBeneficiary)),
-          beneficiary: compressAddress(struct2.beneficiary),
-          numberOfClaims: struct2.numberOfClaims,
+        Insurance.portfolioInsurance.add(Insurance(
+          struct2[0].toString(),
+          struct2[1].toString(),
+          struct2[2].toString(),
+          ethersSplitter(int.parse(struct2[3].toString())),
+          struct2[5].toString(),
+          struct2[7],
+          ethersSplitter(int.parse(struct2[6].toString())),
         ));
+        notifyListeners();
       }
+      print(Insurance.portfolioInsurance);
 
       noErrors = true;
       msg = 'Successful';
@@ -135,23 +130,16 @@ class InsuranceProvider extends ChangeNotifier {
       error = true;
       notifyListeners();
     }
+    noErrors = false;
+    error = false;
+    isFinished = true;
     loading = false;
     notifyListeners();
   }
 
-  // priceOfMatic() async {
-  //   try {
-  //     final result = await anotherContract!.call<BigInt>(
-  //       'getLatestPrice',
-  //     );
-  //     print('result is $result');
-  //     int _result = result.toInt();
-  //     double d = _result * 0.00000001;
-  //     maticPrice = compressNumber(d);
-  //     notifyListeners();
-  //   } catch (e) {
-  //     print(e.toString());
-  //     throw e;
-  //   }
-  // }
+  ethersSplitter(int num) {
+    double _result = num.toDouble();
+    double d = _result * 0.000000000000000001;
+    return d;
+  }
 }

@@ -3,22 +3,19 @@ import 'package:flutter/material.dart';
 class TextView extends StatefulWidget {
   final TextEditingController controller;
   final String text;
-  
-  TextView({Key? key,
-    required this.text,
-    required this.controller,}) : super(key: key);
+
+  TextView({Key? key, required this.text, required this.controller,})
+      : super(key: key);
 
   @override
   State<TextView> createState() => _TextViewState();
 }
 
 class _TextViewState extends State<TextView> {
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: TextField(
-        onSubmitted: (_) => widget.controller.clear(),
         decoration: InputDecoration(
             alignLabelWithHint: true,
             hintText: widget.text,

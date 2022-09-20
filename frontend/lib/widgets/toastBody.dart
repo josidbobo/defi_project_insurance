@@ -17,7 +17,7 @@ class ToastBody extends StatelessWidget {
       ),
       child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [Icon(anyOther), const SizedBox(height: 6), Text(msg)]),
+          children: [Icon(anyOther), const SizedBox(width: 6), Text(msg)]),
     );
   }
 }

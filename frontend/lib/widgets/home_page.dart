@@ -89,7 +89,7 @@ class HomePageWidget extends StatelessWidget {
               width: 33,
             ),
             Text(
-              'Egbon Adugbo',
+              'SureBlocks',
               style: Theme.of(context).textTheme.headline2!.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -144,7 +144,7 @@ class HomePageWidget extends StatelessWidget {
                         children: [
                           Container(
                             height: 30,
-                            width: 335,
+                            width: 365,
                             decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)),
@@ -152,7 +152,7 @@ class HomePageWidget extends StatelessWidget {
                             ),
                             child: const Center(
                                 child: Text(
-                                    ' We now store portfolio assets in USDC')),
+                                    ' We now store portfolio assets in \$USK the first stablecoin on Cosmos Ecosystem')),
                           ),
                           Positioned(
                             left: 1,
@@ -187,7 +187,7 @@ class HomePageWidget extends StatelessWidget {
                     height: 220,
                     width: 550,
                     child: Text.rich(TextSpan(
-                        text: 'Egbon Adugbo',
+                        text: 'SureBlocks',
                         style: Theme.of(context)
                             .textTheme
                             .headline1!
@@ -217,7 +217,7 @@ class HomePageWidget extends StatelessWidget {
                   Container(
                     width: 550,
                     child: const Text(
-                      "Live up your life, while knowing that your loved ones and you are protected by Egbon Adugbo with our policies ranging from Life, health, Property, Business and Automobile Insurance.",
+                      "Live up your life, while knowing that your loved ones and you are protected by SureBlocks with our policies ranging from Life, health, Property, Business and Automobile Insurance.",
                       style: TextStyle(
                           color: Colors.black,
                           leadingDistribution: TextLeadingDistribution.even),

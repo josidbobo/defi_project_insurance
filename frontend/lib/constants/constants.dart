@@ -1,4 +1,4 @@
-const insuranceAddress = "0xDbA3143cBa22b5b904F2f736cbB42F1268A64208";
+const insuranceAddress = "0xCdbf6dFC6Ce1B72De76B57dE247202FC621F987a";
 //const insuranceAddress2 = '0xB517274C514fb783f5C8Aaac69bAf9433fDb1aC2';
 //const insuranceAddress = "0xad78b7b35ea23066449260a86d2b7321fefd337f";
 
@@ -119,35 +119,6 @@ const abii = '''[
 		],
 		"name": "InsuranceMade",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_idOfClaim",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_password",
-				"type": "string"
-			}
-		],
-		"name": "approveClaim",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"inputs": [
@@ -351,11 +322,6 @@ const abii = '''[
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
 			}
 		],
 		"name": "makeClaim",
@@ -461,11 +427,6 @@ const abii = '''[
 				"internalType": "bool",
 				"name": "isApproved",
 				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "numberOfClaims",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -592,11 +553,6 @@ const abii = '''[
 				"internalType": "bool",
 				"name": "isApproved",
 				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "numberOfClaims",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

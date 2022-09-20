@@ -14,11 +14,11 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController textEditingController = TextEditingController();
 
   List<Insurance> foundUsers = [];
-  List<Insurance> fullList = InsuranceProvider.portfolioInsurance;
+  List<Insurance> fullList = Insurance.portfolioInsurance;
 
   @override
   initState() {
-    foundUsers = InsuranceProvider.portfolioInsurance;
+    foundUsers = Insurance.portfolioInsurance;
     super.initState();
   }
 
@@ -49,6 +49,8 @@ class _SearchPageState extends State<SearchPage> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(left: 43, right: 43),
               child: Column(
                 children: [
                   Container(
@@ -112,7 +114,7 @@ class _SearchPageState extends State<SearchPage> {
                                           style: const TextStyle(fontSize: 24),
                                         ),
                                         title: Text(
-                                            foundUsers[index].insuranceName),
+                                            foundUsers[index].insuranceName, style: const TextStyle(fontWeight: FontWeight.bold)),
                                         subtitle: Text(foundUsers[index].owner),
                                         trailing: ElevatedButton(
                                             onPressed: () {
@@ -138,7 +140,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                   ),
                 ],
-              ),
+              ),),
             ),
           );
         });

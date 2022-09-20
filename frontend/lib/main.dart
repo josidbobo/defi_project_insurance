@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 } else if (provider.isConnected && !provider.isOperatingChain) {
                   text =
-                      "Wrong Chain ${context.watch<MetaMaskProvider>().currentChain}. Please connect to Rinkeby!";
+                      "Wrong Chain ${context.watch<MetaMaskProvider>().currentChain}. Please connect to TevMos 9000!";
                 } else if (provider.isEnabled && !provider.isConnected) {
                   return HomePageWidget();
                 } else {
