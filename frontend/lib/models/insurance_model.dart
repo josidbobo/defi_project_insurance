@@ -40,19 +40,23 @@ class Insurance {
   //   );
   // }
 
-  factory Insurance(
-    String oowner, String iid, String iinsuranceName, double aamount, String bbeneficiary,
-    bool iisApproved, double aamountForBeneficiary,){
+  factory Insurance(List<dynamic> stu){
     return Insurance._internal(
-      owner: oowner, 
-      id: iid, 
-      insuranceName: iinsuranceName, 
-      amountForBeneficiary: aamountForBeneficiary, 
-      isApproved: iisApproved, 
-      amount: aamount, 
-      beneficiary: bbeneficiary);
+      owner: stu[0].toString(), 
+      id: stu[1].toString(), 
+      insuranceName: stu[2].toString(), 
+      amountForBeneficiary: double.parse(stu[6]), 
+      isApproved: stu[7], 
+      amount: double.parse(stu[3]), 
+      beneficiary: stu[5].toString());
   }
 
-  static List<Insurance> insurance = <Insurance>[];
-  static List<Insurance> portfolioInsurance = <Insurance> [];
+  ethersSplitter(int num) {
+    double _result = num.toDouble();
+    double d = _result * 0.000000000000000001;
+    return d;
+  }
+
+  static List<dynamic> insurance = [];
+  static List<dynamic> portfolioInsurance = [];
 }

@@ -3,8 +3,10 @@ import 'package:insurance_dapp/models/insurance_model.dart';
 import 'package:insurance_dapp/widgets/portfolios_view.dart';
 import 'package:insurance_dapp/widgets/progressIndicator.dart';
 import 'package:insurance_dapp/widgets/toastBody.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:provider/provider.dart';
 import '../widgets/text_field.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../providers/insurance_provider.dart';
@@ -28,8 +30,6 @@ class _PortfolioState extends State<Portfolio> {
   @override
   void initState() {
     super.initState();
-    fToast = FToast();
-    fToast!.init(context);
   }
 
   @override
@@ -76,7 +76,7 @@ class _PortfolioState extends State<Portfolio> {
                               text: 'Beneficiary address',
                               controller: widget.insureBeneficiary),
                           TextView(
-                              text: 'Max amount beneficiary can withdraw',
+                              text: 'Max amount beneficiary allowed to withdraw',
                               controller: widget.amountForBenef),
                           !provider.isInsureed
                               ? TextView(
@@ -84,49 +84,74 @@ class _PortfolioState extends State<Portfolio> {
                                   controller: widget.insurePassword)
                               : const SizedBox(),
                           ListTile(
-                            trailing: ElevatedButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14.0),
-                                  )),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color?>(
-                                    Colors.orange[600],
-                                  )),
-                              onPressed: () {
-                                provider.isInsureed
-                                    ? context.read<InsuranceProvider>().insure(
-                                        widget.typeOfInsurance.text,
-                                        widget.insureAmount.text,
-                                        widget.insureBeneficiary.text,
-                                        widget.amountForBenef.text,
-                                        "")
-                                    : context.read<InsuranceProvider>().insure(
-                                        widget.typeOfInsurance.text,
-                                        widget.insureAmount.text,
-                                        widget.insureBeneficiary.text,
-                                        widget.amountForBenef.text,
-                                        widget.insurePassword.text);
-                                if (provider.noErrors) {
-                                  Navigator.of(context).pop();
-                                  showToast(provider.msg,
-                                      Icons.playlist_add_check_rounded);
-                                }
-                                if (provider.error) {
-                                  showToast(
-                                      provider.msg, Icons.error_outline, true);
-                                }if(provider.isFinished){
-                                  dispose();
-                                }
-                              },
-                              child: provider.isLoading
-                                  ? const CircularProgress()
-                                  : const Text(
-                                      "Create Portfolio",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                            trailing: SizedBox(
+                              height: 36,
+                              width: 121,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color?>(
+                                      Colors.orange[600],
+                                    )),
+                                onPressed: () {
+                                  provider.isInsureed
+                                      ? context
+                                          .read<InsuranceProvider>()
+                                          .insure(
+                                              widget.typeOfInsurance.text,
+                                              widget.insureAmount.text,
+                                              widget.insureBeneficiary.text,
+                                              widget.amountForBenef.text,
+                                              "")
+                                      : context
+                                          .read<InsuranceProvider>()
+                                          .insure(
+                                              widget.typeOfInsurance.text,
+                                              widget.insureAmount.text,
+                                              widget.insureBeneficiary.text,
+                                              widget.amountForBenef.text,
+                                              widget.insurePassword.text);
+                                  if (provider.noErrors) {
+                                    MotionToast.success(
+                                      description: Text(
+                                        provider.msg,
+                                      ),
+                                      title: const Text('Success'),
+                                      dismissable: true,
+                                      layoutOrientation: ToastOrientation.ltr,
+                                      toastDuration: const Duration(seconds: 3),
+                                      position: MotionToastPosition.top,
+                                    ).show(context);
+                                  }
+                                  if (provider.error) {
+                                    MotionToast.error(
+                                      description: Text(
+                                        provider.msg,
+                                      ),
+                                      title: const Text('Error'),
+                                      dismissable: true,
+                                      layoutOrientation: ToastOrientation.ltr,
+                                      toastDuration: const Duration(seconds: 3),
+                                      position: MotionToastPosition.top,
+                                    ).show(context);
+                                  }
+                                  if (provider.isFinished) {
+                                    Navigator.of(context).pop();
+                                    dispose();
+                                  }
+                                },
+                                child: provider.isLoading
+                                    ? const CircularProgress()
+                                    : const Text(
+                                        "Create Portfolio",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                              ),
                             ),
                           ),
                         ],
@@ -163,7 +188,7 @@ class _PortfolioState extends State<Portfolio> {
                       width: 33,
                     ),
                     Text(
-                      'Egbon Adugbo - Portfolios ',
+                      'SureBlocks - Portfolios ',
                       style: Theme.of(context).textTheme.headline2!.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
@@ -259,7 +284,7 @@ class _PortfolioState extends State<Portfolio> {
                       if (Insurance.insurance.isEmpty) {
                         return Center(
                           child: Text(
-                            'No Portfolios to display!',
+                            'No Portfolios created yet!',
                             style: Theme.of(context).textTheme.headline2,
                           ),
                         );
@@ -268,12 +293,12 @@ class _PortfolioState extends State<Portfolio> {
                         itemBuilder: ((context, index) {
                           return PortfolioView(
                             amountOfInsurance:
-                                Insurance.insurance[index].amount,
-                            id: int.parse(Insurance.insurance[index].id),
+                                double.parse(Insurance.insurance[index][3]),
+                            id: int.parse(Insurance.insurance[index][1]),
                             beneficiaryAddress:
-                                Insurance.insurance[index].beneficiary,
+                                Insurance.insurance[index][5].toString(),
                             nameOfInsurance:
-                                Insurance.insurance[index].insuranceName,
+                                Insurance.insurance[index][2].toString(),
                           );
                         }),
                         itemCount: Insurance.insurance.length,

@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'SureBlocks Protocol',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           canvasColor: Colors.grey[100],
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) =>
-              const MyHomePage(title: 'Egbon Adugbo Insurance Ltd'),
+              const MyHomePage(title: 'SureBlocks Protocol'),
           '/portfolio': (context) => Portfolio(),
           '/makeClaims' : (context) => const SearchPage(),
         });
@@ -86,11 +86,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 } else if (provider.isConnected && !provider.isOperatingChain) {
                   text =
                       "Wrong Chain ${context.watch<MetaMaskProvider>().currentChain}. Please connect to TevMos 9000!";
-                } else if (provider.isEnabled && !provider.isConnected) {
-                  return HomePageWidget();
-                } else {
+                      return Center(
+                        child: Text(
+                        text,
+                        style: Theme.of(context).textTheme.headline2,
+                      ));
+                }  else if (provider.noBrowserWallet){
                   text =
-                      'Please use an ethereum enabled browser to access this site';
+                      'Please use an ethereum enabled browser to access this site or walletConnect Modal';
+                } else {
+                  return HomePageWidget();
                 }
                 return Center(
                     child: Text(

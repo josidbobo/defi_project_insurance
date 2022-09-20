@@ -1,4 +1,4 @@
-const insuranceAddress = "0xCdbf6dFC6Ce1B72De76B57dE247202FC621F987a";
+const insuranceAddress = "0x226817b28479fC309516834E13Aa713960773524";
 //const insuranceAddress2 = '0xB517274C514fb783f5C8Aaac69bAf9433fDb1aC2';
 //const insuranceAddress = "0xad78b7b35ea23066449260a86d2b7321fefd337f";
 

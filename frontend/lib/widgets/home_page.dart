@@ -4,7 +4,7 @@ import 'package:insurance_dapp/widgets/list_view_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class HomePageWidget extends StatelessWidget {
+class HomePageWidget extends StatelessWidget{
   HomePageWidget({Key? key}) : super(key: key);
 
   final Color color = Colors.lightBlue[100] as Color;
@@ -95,7 +95,7 @@ class HomePageWidget extends StatelessWidget {
                     color: Colors.black87,
                   ),
             ),
-            const SizedBox(width: 680),
+            const SizedBox(width: 446),
             const Text('Home'),
             const SizedBox(width: 22),
             const Text('Partners'),
@@ -116,9 +116,21 @@ class HomePageWidget extends StatelessWidget {
                       )),
                   onPressed: () => context.read<MetaMaskProvider>().connect(),
                   child: const Text(
-                    "Connect",
+                    "Connect Browser Wallet",
                     style: TextStyle(color: Colors.white),
                   ));
+            }),
+            const SizedBox(width: 5,),
+            Consumer<MetaMaskProvider>(builder: (context, provider, child) {
+              return ElevatedButton(
+                onPressed: () =>
+                    context.read<MetaMaskProvider>().cconnect(context),
+                style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
+                child: const Center(
+                    child: Text('WalletConnect Modal',
+                        style: TextStyle(color: Colors.white))),
+              );
+              ;
             }),
           ],
         ),
@@ -144,7 +156,7 @@ class HomePageWidget extends StatelessWidget {
                         children: [
                           Container(
                             height: 30,
-                            width: 365,
+                            width: 560,
                             decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)),
@@ -152,7 +164,7 @@ class HomePageWidget extends StatelessWidget {
                             ),
                             child: const Center(
                                 child: Text(
-                                    ' We now store portfolio assets in \$USK the first stablecoin on Cosmos Ecosystem')),
+                                    '          We now store portfolio assets in \$USK the first stablecoin on Cosmos Ecosystem')),
                           ),
                           Positioned(
                             left: 1,
@@ -172,12 +184,6 @@ class HomePageWidget extends StatelessWidget {
                               )),
                             ),
                           ),
-                          const Positioned(
-                              right: 7,
-                              child: Icon(
-                                Icons.arrow_forward_ios_sharp,
-                                size: 12,
-                              )),
                         ],
                       )
                     ],
@@ -195,19 +201,19 @@ class HomePageWidget extends StatelessWidget {
                         children: [
                           TextSpan(
                               text:
-                                  ' is that guy in the neigbourhood who is greatly feared but will ',
+                                  ' prides itself in being the first decentralised Insurance and financial hedgings protocol on ',
                               style: Theme.of(context).textTheme.headline2),
                           TextSpan(
                               text:
-                                  'protect you when you\'re his friend, you have nothing to fear when Egbon is your guy, that\'s why ',
+                                  'the EVM compatible Cosmos chain - Evmos, the volatility of financial markets has made it of ',
                               style: Theme.of(context).textTheme.headline2),
                           TextSpan(
                               text:
-                                  'you should feel safe when you secure your future with ',
+                                  'great concern to people to be worried about their finances that\'s why you should feel safe when ',
                               style: Theme.of(context).textTheme.headline2),
-                          TextSpan(
+                              TextSpan(
                               text:
-                                  'our insurance policies, risk free on the blockchain.',
+                                  'you are protected against the inflation by insuring your funds on SureBlocks risk free on the Blockchain ',
                               style: Theme.of(context).textTheme.headline2),
                         ])),
                   ),
@@ -388,7 +394,7 @@ class HomePageWidget extends StatelessWidget {
                   Theme.of(context).textTheme.headline2!.copyWith(fontSize: 23),
             ),
             const Text(
-              'Hello there, we are a web3 insurance company based in Nigeria, below is the consideration why we are better than our competitors.',
+              'Hello there, we are the first Decentralised Hedgings Protocol on Evmos, a fast and green positive chain on Cosmos below are the considerations why we are better than our competitors.',
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ],
@@ -405,7 +411,7 @@ class HomePageWidget extends StatelessWidget {
               ScrollableW(
                   mainText: 'Certified Platform',
                   subText:
-                      'In few months we already help countless companies with insurance and have become a certified platform',
+                      'All our contracts have been audited and undergo continuous scrutiny to insure safety of all funds.',
                   iconImage: html2),
               ScrollableW(
                   mainText: 'Experienced Team',
@@ -415,7 +421,7 @@ class HomePageWidget extends StatelessWidget {
               ScrollableW(
                   mainText: '24/7 Service',
                   subText:
-                      'Need help for your insurance? No worries because we are here 24/7 at your service',
+                      'Need help with an insurance plan? No worries because we are here 24/7 at your service',
                   iconImage: html8)
             ],
           ),
@@ -437,7 +443,9 @@ class HomePageWidget extends StatelessWidget {
                           .headline1!
                           .copyWith(fontSize: 21),
                       children: [
-                        TextSpan(text: '© 2022', style: Theme.of(context).textTheme.bodyText1)
+                        TextSpan(
+                            text: '© 2022',
+                            style: Theme.of(context).textTheme.bodyText1)
                       ])),
                 ),
               )

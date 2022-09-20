@@ -35,6 +35,7 @@ dependencies:
   flutter_html: ^2.2.1
   walletconnect_qrcode_modal_dart: ^0.0.5
   walletconnect_dart: ^0.0.11
+  motion_toast: ^2.4.3
 
 
 

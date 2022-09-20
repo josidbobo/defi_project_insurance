@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 class CircularProgress extends StatelessWidget {
   const CircularProgress(
-      {Key? key, this.materialStrokeWidth = 3.5, this.height, this.color})
+      {Key? key, this.materialStrokeWidth = 1.5, this.height, this.color})
       : super(key: key);
 
   final double? height;

@@ -6,20 +6,21 @@ import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../models/insurance_model.dart';
 import 'package:flutter_web3/flutter_web3.dart';
 import '../constants/constants.dart';
-import 'dart:math';
+import 'package:flutter_web3/wallet_connect.dart' as a;
 
 class MetaMaskProvider extends ChangeNotifier {
   static const operatingChain = 9000;
 
   String currentAddress = "";
-  static String curentAddress = ''; 
-  
+  static String curentAddress = '';
 
   int currentChain = -1;
 
+  static bool isWC = false;
   bool rejected = false;
   bool connected = false;
-  
+  bool noBrowserWallet = false;
+
   String get address => currentAddress;
 
   bool get isEnabled => ethereum != null;
@@ -30,12 +31,7 @@ class MetaMaskProvider extends ChangeNotifier {
 
   /// Second segment
   ///
-  //Web3Provider? web3;
-
-  List<Insurance> insurance = [];
-  bool loading = false;
-
-  get isLoading => loading;
+  static Web3Provider? web3;
 
   String compressAddress(String address) {
     String c = address.substring(0, 5);
@@ -43,6 +39,13 @@ class MetaMaskProvider extends ChangeNotifier {
 
     String result = '$c...$d';
     return result;
+  }
+
+  whichOne(BuildContext context) {
+    if(isWC){
+      cconnect(context);
+    }
+    connect();
   }
   
 
@@ -57,33 +60,58 @@ class MetaMaskProvider extends ChangeNotifier {
         notifyListeners();
       }
       notifyListeners();
+    } else if (!isEnabled) {
+      noBrowserWallet = true;
+      notifyListeners();
     }
   }
 
-  static final rpcProvider = JsonRpcProvider(
-      'https://polygon-mumbai.infura.io/v3/6ae7a9cc55f84ca9b261e89f21ff5848');
+  cconnect(BuildContext context) async {
+    // Create a connector
+    final qrCodeModal = WalletConnectQrCodeModal(
+      connector: WalletConnect(
+        bridge: 'https://bridge.walletconnect.org',
+        clientMeta: const PeerMeta(
+          // <-- Meta data of your app appearing in the wallet when connecting
+          name: 'QRCodeModalExampleApp',
+          description: 'WalletConnect Developer App',
+          url: 'https://walletconnect.org',
+          icons: [
+            'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
+          ],
+        ),
+      ),
+    );
 
-  
+    final wc = a.WalletConnectProvider.fromRpc(
+      {9000: 'https://eth.bd.evmos.dev:8545'},
+      chainId: 9000,
+      network: 'Evmos Testnet',
+    );
+    // Subscribe to events
+    qrCodeModal.registerListeners(
+        onConnect: (session) {
+          currentAddress = session.accounts.first;
+          curentAddress = session.accounts.first;
+          currentChain = session.chainId;
+          notifyListeners();
+          print('Connected: $session');
+        },
+        onSessionUpdate: (response) => print('Session updated: $response'),
+        onDisconnect: () {
+          clear();
+          print('Disconnected');
+        });
+
+    // Create QR code modal and connect to a wallet
+    await qrCodeModal.connect(context, chainId: 9000);
+    web3 = Web3Provider.fromWalletConnect(wc);
+    isWC = true;
+    notifyListeners();
+  }
 
   Future<void> disconnect() async {
     clear();
-    //final acc = await ethereum!.request("wallet_requestPermissions", [ethereum!.requestAccount()]);
-
-    // try {
-    //   if (currentAddress.isEmpty) {
-    //     final accounts = await ethereum!.requestAccount();
-
-    //     if (accounts.isNotEmpty) {
-    //       currentAddress = accounts.first;
-    //       currentChain = await ethereum!.getChainId();
-    //       print(currentAddress);
-    //     }
-    //   }
-    // } catch (e) {
-    //   rejected = true;
-    //   notifyListeners();
-    //   print(e.toString());
-    // }
     notifyListeners();
   }
 

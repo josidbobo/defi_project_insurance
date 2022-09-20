@@ -5,6 +5,8 @@ import 'package:flutter_web3/flutter_web3.dart';
 import '../constants/constants.dart';
 import 'dart:math';
 
+import 'metamask_provider.dart';
+
 class InsuranceProvider extends ChangeNotifier {
   // List<Insurance> get insuranceList => insurance;
 
@@ -22,6 +24,10 @@ class InsuranceProvider extends ChangeNotifier {
   Contract? contract;
 
   InsuranceProvider() {
+    if (MetaMaskProvider.isWC) {
+      anotherContract = Contract(insuranceAddress, abii, MetaMaskProvider.web3);
+      contract = anotherContract!.connect(MetaMaskProvider.web3!.getSigner());
+    }
     anotherContract = Contract(insuranceAddress, abii, provider);
     contract = anotherContract!.connect(provider!.getSigner());
   }
@@ -83,43 +89,29 @@ class InsuranceProvider extends ChangeNotifier {
       for (int i = 1; i <= result.toInt() + 1; i++) {
         final struct = await anotherContract!
             .call('userInsurances', [MetaMaskProvider.curentAddress, i]);
-        print(struct);
+        print('This is struct $struct');
 
-        Insurance.insurance.add(Insurance(
-          struct[0].toString(),
-          struct[1].toString(),
-          struct[2].toString(),
-          ethersSplitter(int.parse(struct[3].toString())),
-          struct[5].toString(),
-          struct[7],
-          ethersSplitter(int.parse(struct[6].toString())),
-        ));
+        // Insurance _item = Insurance(struct);
+        // print('This is item $_item');
+        Insurance.insurance.add(struct);
         notifyListeners();
-      }
 
-      print(Insurance.insurance);
+        print('This is insurance list ${Insurance.insurance[0]}');
+      }
 
       final count = await anotherContract!.call<BigInt>(
         'count',
       );
       print(count);
 
-      for (int i = 1; i <= count.toInt(); i++) {
+      for (int i = 1; i <= count.toInt() + 1; i++) {
         final struct2 = await anotherContract!.call('portfolios', [i]);
         print(struct2);
 
-        Insurance.portfolioInsurance.add(Insurance(
-          struct2[0].toString(),
-          struct2[1].toString(),
-          struct2[2].toString(),
-          ethersSplitter(int.parse(struct2[3].toString())),
-          struct2[5].toString(),
-          struct2[7],
-          ethersSplitter(int.parse(struct2[6].toString())),
-        ));
+        Insurance.portfolioInsurance.add(struct2);
         notifyListeners();
       }
-      print(Insurance.portfolioInsurance);
+      print('This is portfolio ${Insurance.portfolioInsurance[0]}');
 
       noErrors = true;
       msg = 'Successful';

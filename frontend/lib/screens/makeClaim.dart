@@ -14,20 +14,20 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController textEditingController = TextEditingController();
 
   List<Insurance> foundUsers = [];
-  List<Insurance> fullList = Insurance.portfolioInsurance;
+  //List<Insurance> fullList = Insurance.portfolioInsurance;
 
   @override
   initState() {
-    foundUsers = Insurance.portfolioInsurance;
+    //foundUsers = Insurance.portfolioInsurance;
     super.initState();
   }
 
   void filter(String enteredKeyword) {
     List<Insurance> results = [];
     if (enteredKeyword.isEmpty) {
-      results = fullList;
+      results = foundUsers; //fullList
     } else {
-      results = fullList
+      results = foundUsers //fullList
           .where((user) =>
               user.owner.toLowerCase().contains(enteredKeyword.toLowerCase()) ||
               user.insuranceName
@@ -70,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
                               onPressed: () {
                                 setState(() {
                                   textEditingController.clear();
-                                  foundUsers = fullList;
+                                  //foundUsers = fullList;
                                 });
                               },
                             ),
