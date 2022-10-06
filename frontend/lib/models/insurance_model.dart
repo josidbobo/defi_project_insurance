@@ -9,7 +9,7 @@ class Insurance {
   final bool isApproved;
   final double amountForBeneficiary;
 
-  Insurance._internal({
+  Insurance({
     Key? key,
     required this.owner,
     required this.id,
@@ -40,15 +40,18 @@ class Insurance {
   //   );
   // }
 
-  factory Insurance(List<dynamic> stu){
-    return Insurance._internal(
-      owner: stu[0].toString(), 
-      id: stu[1].toString(), 
-      insuranceName: stu[2].toString(), 
-      amountForBeneficiary: double.parse(stu[6]), 
-      isApproved: stu[7], 
-      amount: double.parse(stu[3]), 
-      beneficiary: stu[5].toString());
+  factory Insurance.fromList(List<dynamic> stu) {
+    print(
+      stu[0],
+    );
+    return Insurance(
+        owner: stu[0].toString(),
+        id: stu[1].toString(),
+        insuranceName: stu[2].toString(),
+        amountForBeneficiary: double.parse(stu[6]),
+        isApproved: stu[7],
+        amount: double.parse(stu[3]),
+        beneficiary: stu[5].toString());
   }
 
   ethersSplitter(int num) {
@@ -56,7 +59,4 @@ class Insurance {
     double d = _result * 0.000000000000000001;
     return d;
   }
-
-  static List<dynamic> insurance = [];
-  static List<dynamic> portfolioInsurance = [];
 }

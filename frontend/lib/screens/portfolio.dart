@@ -4,10 +4,9 @@ import 'package:insurance_dapp/widgets/portfolios_view.dart';
 import 'package:insurance_dapp/widgets/progressIndicator.dart';
 import 'package:insurance_dapp/widgets/toastBody.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as c;
 import '../widgets/text_field.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../providers/insurance_provider.dart';
 import '../providers/metamask_provider.dart';
@@ -25,8 +24,6 @@ class Portfolio extends StatefulWidget {
 }
 
 class _PortfolioState extends State<Portfolio> {
-  FToast? fToast;
-
   @override
   void initState() {
     super.initState();
@@ -42,25 +39,19 @@ class _PortfolioState extends State<Portfolio> {
     widget.typeOfInsurance.clear();
   }
 
-  showToast(String msg, IconData anyOther, [bool? bl]) => fToast!.showToast(
-        child: ToastBody(anyOther, msg, bl ?? false),
-        gravity: ToastGravity.TOP,
-        toastDuration: Duration(seconds: 3),
-      );
-
   void _showCreateDialog(context) {
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (_) {
-          return ChangeNotifierProvider(
+          return c.ChangeNotifierProvider(
               create: (context) => InsuranceProvider()..isInsured(),
               builder: (context, child) {
                 return Dialog(
                   child: SizedBox(
                     height: 410,
                     width: 710,
-                    child: Consumer<InsuranceProvider>(
+                    child: c.Consumer<InsuranceProvider>(
                         builder: (context, provider, child) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -76,7 +67,8 @@ class _PortfolioState extends State<Portfolio> {
                               text: 'Beneficiary address',
                               controller: widget.insureBeneficiary),
                           TextView(
-                              text: 'Max amount beneficiary allowed to withdraw',
+                              text:
+                                  'Max amount beneficiary allowed to withdraw',
                               controller: widget.amountForBenef),
                           !provider.isInsureed
                               ? TextView(
@@ -165,11 +157,12 @@ class _PortfolioState extends State<Portfolio> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    final providerProperties = c.Provider.of<InsuranceProvider>(context);
+    return c.MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        c.ChangeNotifierProvider(
             create: (context) => MetaMaskProvider()..connect()),
-        ChangeNotifierProvider(create: (context) => InsuranceProvider())
+        c.ChangeNotifierProvider(create: (context) => InsuranceProvider()..getInsurance)
       ],
       builder: (context, child) {
         return Scaffold(
@@ -199,7 +192,7 @@ class _PortfolioState extends State<Portfolio> {
                         style: Theme.of(context).textTheme.headline2!.copyWith(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 6),
-                    Consumer<MetaMaskProvider>(
+                    c.Consumer<MetaMaskProvider>(
                         builder: (context, provider, child) {
                       return Text(context.read<MetaMaskProvider>().address,
                           style: Theme.of(context)
@@ -209,7 +202,7 @@ class _PortfolioState extends State<Portfolio> {
                                   fontSize: 16, fontWeight: FontWeight.bold));
                     }),
                     const SizedBox(width: 39),
-                    Consumer<MetaMaskProvider>(
+                    c.Consumer<MetaMaskProvider>(
                         builder: (context, provider, child) {
                       return ElevatedButton(
                           style: ButtonStyle(
@@ -279,32 +272,29 @@ class _PortfolioState extends State<Portfolio> {
                   Container(
                     height: 780,
                     width: 860,
-                    child: Consumer<InsuranceProvider>(
-                        builder: (context, provider, child) {
-                      if (Insurance.insurance.isEmpty) {
-                        return Center(
+                    child:
+                      (providerProperties.getInsurance.isEmpty) ?
+                        Center(
                           child: Text(
                             'No Portfolios created yet!',
                             style: Theme.of(context).textTheme.headline2,
                           ),
-                        );
-                      }
-                      return ListView.builder(
-                        itemBuilder: ((context, index) {
-                          return PortfolioView(
-                            amountOfInsurance:
-                                double.parse(Insurance.insurance[index][3]),
-                            id: int.parse(Insurance.insurance[index][1]),
-                            beneficiaryAddress:
-                                Insurance.insurance[index][5].toString(),
-                            nameOfInsurance:
-                                Insurance.insurance[index][2].toString(),
-                          );
-                        }),
-                        itemCount: Insurance.insurance.length,
-                        padding: const EdgeInsets.all(10),
-                      );
-                    }),
+                        ):
+                     ListView.builder(
+                          itemBuilder: ((context, index) {
+                            return PortfolioView(
+                              amountOfInsurance:
+                                  double.parse(providerProperties.getInsurance[index]['amount']),
+                              id: int.parse(providerProperties.getInsurance[index]['id']),
+                              beneficiaryAddress:
+                                  providerProperties.getInsurance[index]['beneficiary'].toString(),
+                              nameOfInsurance:
+                                  providerProperties.getInsurance[index]['insuranceName'].toString(),
+                            );
+                          }),
+                          itemCount: providerProperties.getInsurance.length,
+                          padding: const EdgeInsets.all(10),
+                        ),
                   ),
                   const SizedBox(
                     width: 25,

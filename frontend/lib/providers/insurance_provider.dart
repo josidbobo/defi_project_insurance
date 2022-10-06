@@ -3,13 +3,9 @@ import 'package:insurance_dapp/providers/metamask_provider.dart';
 import '../models/insurance_model.dart';
 import 'package:flutter_web3/flutter_web3.dart';
 import '../constants/constants.dart';
-import 'dart:math';
-
 import 'metamask_provider.dart';
 
 class InsuranceProvider extends ChangeNotifier {
-  // List<Insurance> get insuranceList => insurance;
-
   bool loading = false;
   bool error = false;
   bool noErrors = false;
@@ -24,12 +20,12 @@ class InsuranceProvider extends ChangeNotifier {
   Contract? contract;
 
   InsuranceProvider() {
+    anotherContract = Contract(insuranceAddress, abii, provider);
+    contract = anotherContract!.connect(provider!.getSigner());
     if (MetaMaskProvider.isWC) {
       anotherContract = Contract(insuranceAddress, abii, MetaMaskProvider.web3);
       contract = anotherContract!.connect(MetaMaskProvider.web3!.getSigner());
     }
-    anotherContract = Contract(insuranceAddress, abii, provider);
-    contract = anotherContract!.connect(provider!.getSigner());
   }
 
   static String compressAddress(String address) {
@@ -40,6 +36,10 @@ class InsuranceProvider extends ChangeNotifier {
 
     return result;
   }
+
+  static List<Map<String, dynamic>> insurance = [];
+  get getInsurance => insurance;
+  List<Map<String, dynamic>> portfolioInsurance = [];
 
   String compressNumber(double num) {
     String _num = num.toString();
@@ -59,6 +59,8 @@ class InsuranceProvider extends ChangeNotifier {
 
   Future<void> insure(String name, String aamount, String beneficiary,
       String _amountForBenef, String password) async {
+    List<Map<String, dynamic>> tempInsuranceList = [];
+    List<Map<String, dynamic>> tempPortfolioList = [];
     try {
       loading = true;
       notifyListeners();
@@ -90,14 +92,25 @@ class InsuranceProvider extends ChangeNotifier {
         final struct = await anotherContract!
             .call('userInsurances', [MetaMaskProvider.curentAddress, i]);
         print('This is struct $struct');
+        print('This is struct\'s first index ${struct[0]}');
 
         // Insurance _item = Insurance(struct);
         // print('This is item $_item');
-        Insurance.insurance.add(struct);
-        notifyListeners();
+        tempInsuranceList.add({
+          'id': struct[1].toString(),
+          'ownerAddress': compressAddress(struct[0].toString()),
+          'insuranceName': struct[2].toString(),
+          'amount': ethersSplitter(int.parse(struct[3].toString())),
+          'beneficiary': compressAddress(struct[5].toString()),
+          'beneficiaryAmount': ethersSplitter(int.parse(struct[6].toString())),
+          'isApproved': struct[7]
+        });
 
-        print('This is insurance list ${Insurance.insurance[0]}');
+        print('Added new Item to tempList');
       }
+      insurance = tempInsuranceList;
+      notifyListeners();
+      print('This is the insurance list length ${insurance.length}');
 
       final count = await anotherContract!.call<BigInt>(
         'count',
@@ -108,10 +121,17 @@ class InsuranceProvider extends ChangeNotifier {
         final struct2 = await anotherContract!.call('portfolios', [i]);
         print(struct2);
 
-        Insurance.portfolioInsurance.add(struct2);
-        notifyListeners();
+        tempPortfolioList.add({
+          'id': struct2[1].toString(),
+          'ownerAddress': struct2[0].toString(),
+          'insuranceName': struct2[2].toString(),
+          'beneficiary': struct2[5].toString(),
+        });
+        print('Adding the temp list items now');
       }
-      print('This is portfolio ${Insurance.portfolioInsurance[0]}');
+      portfolioInsurance = tempPortfolioList;
+      notifyListeners();
+      print('This is portfolio length: ${portfolioInsurance.length}');
 
       noErrors = true;
       msg = 'Successful';

@@ -12,7 +12,7 @@ async function main() {
   const Egbon = await hre.ethers.getContractFactory("SureBlocks");
   const egbon = await Egbon.deploy();
 
-  await egbon.deployed();
+  await egbon.deployed(); 
 
   console.log(
     `BlockInsure deployed to ${egbon.address}`
